@@ -1303,24 +1303,6 @@ Request.prototype.json = function (val) {
 
   return self
 }
-Request.prototype.getHeader = function (name, headers) {
-  var self = this
-  var result, re, match
-  if (!headers) {
-    headers = self.headers
-  }
-  Object.keys(headers).forEach(function (key) {
-    if (key.length !== name.length) {
-      return
-    }
-    re = new RegExp(name, 'i')
-    match = key.match(re)
-    if (match) {
-      result = headers[key]
-    }
-  })
-  return result
-}
 Request.prototype.enableUnixSocket = function () {
   // Get the socket & request paths from the URL
   var unixParts = this.uri.path.split(':')
@@ -1334,7 +1316,6 @@ Request.prototype.enableUnixSocket = function () {
   this.uri.hostname = host
   this.uri.isUnix = true
 }
-
 Request.prototype.auth = function (user, pass, sendImmediately, bearer) {
   var self = this
 
@@ -1405,7 +1386,7 @@ Request.prototype.httpSignature = function (opts) {
   var self = this
   httpSignature.signRequest({
     getHeader: function (header) {
-      return self.getHeader(header, self.headers)
+      return self.getHeader(header)
     },
     setHeader: function (header, value) {
       self.setHeader(header, value)
